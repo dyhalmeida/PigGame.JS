@@ -8,30 +8,33 @@ REGRAS DO JOGO:
 
 */
 
-var scores, roundScore, activeplayer;
+var scores, roundScore, activeplayer, gamePlaying;
 
 init();
 
 // Adiciona uma escuta de evento ao botão de jogar o dado com função anônima de callback
 document.querySelector('.btn-roll').addEventListener('click', function() {
     
-    // 1. Pega os números aleatório de 1 a 6
-    var dice = Math.floor(Math.random() * 6) + 1;
-    
-    // 2. Apresenta a imagem do dado e troca de acordo com o número aleatório
-    var diceDOM = document.querySelector('.dice');
-    diceDOM.src = 'dice-' + dice + '.png';
-    diceDOM.style.display = 'block';
-    //console.log(dice);
-    
-    // 3. Atualiza a pontuação ATUAL se o número do dado não for 1
-    if(!(dice === 1)) {
+    if(gamePlaying) {
         
-        roundScore += dice;
-        document.querySelector('#current-' + activeplayer).textContent = roundScore;
-        
-    } else {
-        nextPlayer();       
+        // 1. Pega os números aleatório de 1 a 6
+        var dice = Math.floor(Math.random() * 6) + 1;
+    
+        // 2. Apresenta a imagem do dado e troca de acordo com o número aleatório
+        var diceDOM = document.querySelector('.dice');
+        diceDOM.src = 'dice-' + dice + '.png';
+        diceDOM.style.display = 'block';
+        //console.log(dice);
+
+        // 3. Atualiza a pontuação ATUAL se o número do dado não for 1
+        if(!(dice === 1)) {
+
+            roundScore += dice;
+            document.querySelector('#current-' + activeplayer).textContent = roundScore;
+
+        } else {
+            nextPlayer();       
+        }
     }
     
 });
@@ -39,20 +42,26 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
 // Adiciona uma escuta de evento ao botão de guardar pontuação no score Global
 document.querySelector('.btn-hold').addEventListener('click', function() {
     
-    // Adicionar a pontuação atual a pontuação global do jogador ativo
-    scores[activeplayer] += roundScore;
-    document.querySelector('#score-' + activeplayer).textContent = scores[activeplayer];
+    if(gamePlaying) {
+     
+        // Adicionar a pontuação atual a pontuação global do jogador ativo
+        scores[activeplayer] += roundScore;
+        document.querySelector('#score-' + activeplayer).textContent = scores[activeplayer];
+
+        // Verifica se o jogador ganhou
+        if(scores[activeplayer] >= 100) {
+            document.querySelector('.dice').style.display = 'none';
+            document.querySelector('#name-' + activeplayer).textContent = 'Ganhou';
+            document.querySelector('.player-' + activeplayer +'-panel').classList.remove('active');
+            document.querySelector('.player-' + activeplayer +'-panel').classList.add('winner');
+            gamePlaying = false;
+        } else {
+            // Passar a vez do jogador
+            nextPlayer();    
+        }  
+        
+    }  
     
-    // Verifica se o jogador ganhou
-    if(scores[activeplayer] >= 100) {
-        document.querySelector('.dice').style.display = 'none';
-        document.querySelector('#name-' + activeplayer).textContent = 'Ganhou';
-        document.querySelector('.player-' + activeplayer +'-panel').classList.remove('active');
-        document.querySelector('.player-' + activeplayer +'-panel').classList.add('winner');
-    } else {
-        // Passar a vez do jogador
-        nextPlayer();    
-    }    
 });
 
 // Adiciona uma escuta de evento ao botão de iniciar um novo jogo
@@ -82,6 +91,7 @@ function init() {
     scores = [0,0]; // index 0 para jogador 1; index 1 para jogador 2
     roundScore = 0;
     activeplayer = 0; // Para jogador 1 o valor é 0; Para jogador 2 o valor é 1
+    gamePlaying = true
     
     // Esconde a imagem do dado
     document.querySelector('.dice').style.display = 'none';
