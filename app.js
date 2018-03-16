@@ -42,29 +42,48 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
         document.querySelector('#current-' + activeplayer).textContent = roundScore;
         
     } else {
-        
-        // Altera o jogador da vez
-        activeplayer === 0 ? activeplayer = 1 : activeplayer = 0;
-        
-        // Zera o score atual se o dado for 1
-        roundScore = 0;
-        document.getElementById('current-0').textContent = '0';
-        document.getElementById('current-1').textContent = '0';
-        
-        // Identifica qual o jogador da vez
-        document.querySelector('.player-0-panel').classList.toggle('active');
-        document.querySelector('.player-1-panel').classList.toggle('active');
-        
-        // Escode o dado a cada vez que trocar de jogador
-        diceDOM.style.display = 'none';
-        
+        nextPlayer();       
     }
     
 });
 
+// Adiciona uma escuta de evento ao botão de guardar pontuação no score Global
+document.querySelector('.btn-hold').addEventListener('click', function() {
+    
+    // Adicionar a pontuação atual a pontuação global do jogador ativo
+    scores[activeplayer] += roundScore;
+    document.querySelector('#score-' + activeplayer).textContent = scores[activeplayer];
+    
+    // Verifica se o jogador ganhou
+    if(scores[activeplayer] >= 100) {
+        document.querySelector('.dice').style.display = 'none';
+        document.querySelector('#name-' + activeplayer).textContent = 'Ganhou';
+        document.querySelector('.player-' + activeplayer +'-panel').classList.remove('active');
+        document.querySelector('.player-' + activeplayer +'-panel').classList.add('winner');
+    } else {
+        // Passar a vez do jogador
+        nextPlayer();    
+    }    
+});
 
-
-
+function nextPlayer() {
+    
+    // Altera o jogador da vez
+    activeplayer === 0 ? activeplayer = 1 : activeplayer = 0;
+        
+    // Zera o score atual se o dado for 1
+    roundScore = 0;
+    document.getElementById('current-0').textContent = '0';
+    document.getElementById('current-1').textContent = '0';
+        
+    // Identifica qual o jogador da vez
+    document.querySelector('.player-0-panel').classList.toggle('active');
+    document.querySelector('.player-1-panel').classList.toggle('active');
+        
+    // Escode o dado a cada vez que trocar de jogador
+    document.querySelector('.dice').style.display = 'none';
+    
+}
 
 
 
