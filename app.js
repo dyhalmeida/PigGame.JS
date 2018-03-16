@@ -8,20 +8,9 @@ REGRAS DO JOGO:
 
 */
 
- var scores, roundScore, activeplayer;
+var scores, roundScore, activeplayer;
 
-scores = [0,0]; // index 0 para jogador 1; index 1 para jogador 2
-roundScore = 0;
-activeplayer = 0; // Para jogador 1 o valor é 0; Para jogador 2 o valor é 1
-
-// Esconde a imagem do dado
-document.querySelector('.dice').style.display = 'none';
-
-// Zera o scores global e score parcial de ambos jogadores
-document.getElementById('score-0').textContent = '0';
-document.getElementById('score-1').textContent = '0';
-document.getElementById('current-0').textContent = '0';
-document.getElementById('current-1').textContent = '0';
+init();
 
 // Adiciona uma escuta de evento ao botão de jogar o dado com função anônima de callback
 document.querySelector('.btn-roll').addEventListener('click', function() {
@@ -66,6 +55,9 @@ document.querySelector('.btn-hold').addEventListener('click', function() {
     }    
 });
 
+// Adiciona uma escuta de evento ao botão de iniciar um novo jogo
+document.querySelector('.btn-new').addEventListener('click', init);
+
 function nextPlayer() {
     
     // Altera o jogador da vez
@@ -82,6 +74,30 @@ function nextPlayer() {
         
     // Escode o dado a cada vez que trocar de jogador
     document.querySelector('.dice').style.display = 'none';
+    
+}
+
+function init() {
+    
+    scores = [0,0]; // index 0 para jogador 1; index 1 para jogador 2
+    roundScore = 0;
+    activeplayer = 0; // Para jogador 1 o valor é 0; Para jogador 2 o valor é 1
+    
+    // Esconde a imagem do dado
+    document.querySelector('.dice').style.display = 'none';
+
+    // Zera o scores global e score parcial de ambos jogadores
+    document.getElementById('score-0').textContent = '0';
+    document.getElementById('score-1').textContent = '0';
+    document.getElementById('current-0').textContent = '0';
+    document.getElementById('current-1').textContent = '0';
+    document.getElementById('name-0').textContent = 'Jogador 1';
+    document.getElementById('name-1').textContent = 'Jogador 2';
+    document.querySelector('.player-0-panel').classList.remove('winner');
+    document.querySelector('.player-1-panel').classList.remove('winner');
+    document.querySelector('.player-0-panel').classList.remove('active');
+    document.querySelector('.player-1-panel').classList.remove('active');
+    document.querySelector('.player-0-panel').classList.add('active');
     
 }
 
